@@ -1,7 +1,5 @@
 interface KeyBoardProps {
   disabled: boolean;
-  activeLetters?: string[];
-  inactiveLetters?: string[];
   guessedLetters: string[];
   wordToGuess: string;
   setGuessedLetters: React.Dispatch<React.SetStateAction<string[]>>;
@@ -36,14 +34,7 @@ const KEYS = [
   "z",
 ];
 export function KeyBoard(props: KeyBoardProps) {
-  const {
-    activeLetters = ["a", "b"],
-    inactiveLetters = ["c", "d"],
-    disabled,
-    wordToGuess,
-    guessedLetters,
-    setGuessedLetters,
-  } = props;
+  const { disabled, wordToGuess, guessedLetters, setGuessedLetters } = props;
 
   return (
     <div className="grid grid-cols-[repeat(auto-fit,_minmax(75px,_1fr))] gap-2">
@@ -55,7 +46,10 @@ export function KeyBoard(props: KeyBoardProps) {
 
         return (
           <button
-            onClick={() => setGuessedLetters((p) => [...p, key])}
+            onClick={() => {
+              if (disabled) return;
+              setGuessedLetters((p) => [...p, key]);
+            }}
             className={`btn${isActive ? " active" : ""}${
               isInactive ? " inactive" : ""
             }`}
