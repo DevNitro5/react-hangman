@@ -15,7 +15,6 @@ function App() {
   ).length;
   const isLoser = numberOfIncorrectGuesses === 6;
 
-  console.log(wordToGuess);
   const isWinner = wordToGuess
     .split("")
     .every((word) => guessedLetters.includes(word));
@@ -23,16 +22,23 @@ function App() {
   useEffect(() => {
     function handleKeydown(event: KeyboardEvent) {
       const { key } = event;
-      // if (!key.match(/^[a-z]$/) || isLoser || isWinner) return;
       if (!key.match(/^[a-z]$/) || isLoser || isWinner) return;
-      console.log("hello");
       setGuessedLetters((p) => (p.includes(key) ? p : [...p, key]));
     }
 
-    document.addEventListener("keydown", handleKeydown);
-
-    return () => document.removeEventListener("keypress", handleKeydown);
-  }, []);
+    // console.log(isWinner, isLoser);
+    if (!isLoser && !isWinner) {
+      console.log("add event listener");
+      document.addEventListener("keydown", handleKeydown);
+    }
+    return () => {
+      // console.log(isWinner, isLoser);
+      if (!isLoser && !isWinner) {
+        console.log("remove event listener");
+        document.removeEventListener("keydown", handleKeydown);
+      }
+    };
+  }, [isWinner, isLoser]);
 
   return (
     <div className="mt-7 flex flex-col items-center gap-8 mx-auto">
